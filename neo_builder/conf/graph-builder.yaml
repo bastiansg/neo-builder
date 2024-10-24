@@ -1,0 +1,63 @@
+head-creation-query: |
+    UNWIND $rows AS {row_name}
+
+csv-head-creation-query: |
+    LOAD CSV WITH HEADERS FROM 'file:///{file_input}' AS {row_name}
+
+node-create-query: |
+    CALL {{
+        WITH {row_name}
+        CREATE (:{node_type} {{{property_fragment}}})
+    }} IN TRANSACTIONS OF $transaction_size ROWS
+
+node-merge-query: |
+    CALL {{
+        WITH {row_name}
+        MERGE ({node_name}:{node_type} {{node_id: {row_name}.node_id}})
+        ON CREATE SET {property_fragment}
+    }} IN TRANSACTIONS OF $transaction_size ROWS
+
+rel-create-query: |
+    CALL {{
+        WITH {row_name}
+        MATCH (n:{src_node_type} {{{id_property}: {row_name}.src_node_id}}),
+            (m:{tgt_node_type} {{{id_property}: {row_name}.tgt_node_id}})
+        CREATE (n)-[:{rel_type} {{{property_fragment}}}]->(m)
+    }} IN TRANSACTIONS OF $transaction_size ROWS
+
+rel-merge-query: |
+    CALL {{
+        WITH {row_name}
+        MATCH (n:{src_node_type} {{{id_property}: {row_name}.src_node_id}}),
+            (m:{tgt_node_type} {{{id_property}: {row_name}.tgt_node_id}})
+        MERGE (n)-[{rel_name}:{rel_type}]->(m)
+        ON CREATE SET {property_fragment}
+    }} IN TRANSACTIONS OF $transaction_size ROWS
+
+constraint: |
+    CREATE CONSTRAINT {constraint_name} IF NOT EXISTS
+    FOR (n:{node_type}) REQUIRE n.{node_property} IS UNIQUE
+
+index: |
+    CREATE INDEX {index_name} IF NOT EXISTS
+    FOR (n:{node_type}) ON (n.{node_property})
+
+full-text-index: |
+    CREATE FULLTEXT INDEX {index_name} IF NOT EXISTS
+    FOR (n:{node_type}) ON EACH [n.{node_property}]
+    OPTIONS {{
+        indexConfig: {{
+                `fulltext.analyzer`: 'simple',
+                `fulltext.eventually_consistent`: true
+            }}
+    }}
+
+vector-index: |
+    CREATE VECTOR INDEX {index_name} IF NOT EXISTS
+    FOR (n: {node_type}) ON (n.{node_property})
+    OPTIONS {{
+        indexConfig: {{
+            `vector.dimensions`: {vector_size},
+            `vector.similarity_function`: "{similarity_metric}"
+        }}
+    }}

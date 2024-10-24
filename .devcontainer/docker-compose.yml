@@ -1,0 +1,40 @@
+services:
+    neo-builder-devcontainer:
+        network_mode: host
+        image: neo-builder-devcontainer
+        container_name: neo-builder-devcontainer
+        build:
+            context: ..
+            dockerfile: .devcontainer/Dockerfile
+            args:
+                - PYTHON_VERSION
+                - UV_VERSION
+                - DEVCONTAINER_USER
+        volumes:
+            - ..:/workspace:cached
+            - ../resources/:/resources
+        env_file:
+            - ../.env
+        # This keeps the devcontainer running.
+        entrypoint: ["tail", "-f", "/dev/null"]
+
+    neo-builder-neo4j:
+        image: neo4j:${NEO4J_VERSION}-community-bullseye
+        container_name: neo-builder-neo4j
+        environment:
+            - NEO4J_dbms_security_auth__enabled=false
+            - NEO4J_server_memory_heap_initial__size=256M
+            - NEO4J_server_memory_heap_max__size=256M
+            - NEO4J_server_memory_pagecache_size=512M
+            - NEO4J_PLUGINS=["apoc", "graph-data-science"]
+        ports:
+            - "7474:7474"
+            - "7687:7687"
+        volumes:
+            - $PWD/resources/db/neo4j/data:/data:z
+            - $PWD/resources/db/neo4j/import:/import
+        deploy:
+            resources:
+                limits:
+                    cpus: "2"
+                    memory: 1G
