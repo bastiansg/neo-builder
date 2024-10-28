@@ -1,4 +1,4 @@
-import polars as pl
+import pandas as pd
 
 from tqdm import tqdm
 from itertools import chain
@@ -125,12 +125,14 @@ class BaseBuilder(ABC):
 
     def _get_head_creation_query(self, rows: list[dict]) -> str:
         if self.build_from_csv:
-            df_nodes = pl.DataFrame(rows)
+            df_nodes = pd.DataFrame(rows)
             logger.info(f"writing csv => {self.out_path}")
-            df_nodes.write_csv(
+            df_nodes.to_csv(
                 self.out_path,
-                batch_size=10_000,
-                quote_char="'",
+                index=False,
+                chunksize=10_000,
+                doublequote=False,
+                escapechar="\\",
             )
 
             head_creation_query = self.base_queries[

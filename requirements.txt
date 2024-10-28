@@ -1,5 +1,5 @@
 neo4j==5.25.0
-polars==1.11.0
+pandas==2.2.3
 pydantic==2.9.2
 
 common @ git+https://github.com/aureka-team/common.git@v1.1.0
