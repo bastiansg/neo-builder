@@ -75,22 +75,12 @@ class GraphBuilder:
         base_query: str,
     ) -> None:
         for c in constraints:
-            query = base_query.format(
-                constraint_name=c["constraint_name"],
-                node_type=c["node_type"],
-                node_property=c["node_property"],
-            )
-
+            query = base_query.format(**c)
             self.neo_connector.run_query(query=query)
 
     def create_indexes(self, indexes: list[dict], base_query: str) -> None:
         for i in indexes:
-            query = base_query.format(
-                index_name=i["index_name"],
-                node_type=i["node_type"],
-                node_property=i["node_property"],
-            )
-
+            query = base_query.format(**i)
             self.neo_connector.run_query(query=query)
 
     def create_vector_indexes(
@@ -99,14 +89,7 @@ class GraphBuilder:
         base_query: str,
     ) -> None:
         for vi in vector_indexes:
-            query = base_query.format(
-                index_name=vi["index_name"],
-                node_type=vi["node_type"],
-                node_property=vi["node_property"],
-                vector_size=vi["vector_size"],
-                similarity_metric=vi["similarity_metric"],
-            )
-
+            query = base_query.format(**vi)
             self.neo_connector.run_query(query=query)
 
     def build(self) -> None:
