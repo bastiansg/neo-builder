@@ -14,7 +14,7 @@ services:
             - ..:/workspace:cached
             - ../resources/:/resources
         env_file:
-            - ../.env
+            - .env
         # This keeps the devcontainer running.
         entrypoint: ["tail", "-f", "/dev/null"]
 

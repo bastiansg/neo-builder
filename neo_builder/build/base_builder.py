@@ -127,7 +127,11 @@ class BaseBuilder(ABC):
         if self.build_from_csv:
             df_nodes = pl.DataFrame(rows)
             logger.info(f"writing csv => {self.out_path}")
-            df_nodes.write_csv(self.out_path)
+            df_nodes.write_csv(
+                self.out_path,
+                batch_size=10_000,
+                quote_char="'",
+            )
 
             head_creation_query = self.base_queries[
                 "csv-head-creation-query"
