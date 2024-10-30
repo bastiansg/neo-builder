@@ -59,6 +59,6 @@ vector-index: |
         indexConfig: {{
             `vector.dimensions`: {vector_size},
             `vector.similarity_function`: "{similarity_metric}",
-            `vector.quantization.enabled`: {quantization},
+            `vector.quantization.enabled`: {quantization}
         }}
     }}
