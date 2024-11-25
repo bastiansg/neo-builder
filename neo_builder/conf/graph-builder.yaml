@@ -5,20 +5,20 @@ csv-head-creation-query: |
     LOAD CSV WITH HEADERS FROM 'file:///{file_input}' AS {row_name}
 
 node-create-query: |
-    CALL {{
+    CALL ({row_name}) {{
         WITH {row_name}
         CREATE (:{node_type} {{{property_fragment}}})
     }} IN TRANSACTIONS OF $transaction_size ROWS
 
 node-merge-query: |
-    CALL {{
+    CALL ({row_name}) {{
         WITH {row_name}
         MERGE ({node_name}:{node_type} {{node_id: {row_name}.node_id}})
         ON CREATE SET {property_fragment}
     }} IN TRANSACTIONS OF $transaction_size ROWS
 
 rel-create-query: |
-    CALL {{
+    CALL ({row_name}) {{
         WITH {row_name}
         MATCH (n:{src_node_type} {{{id_property}: {row_name}.src_node_id}}),
             (m:{tgt_node_type} {{{id_property}: {row_name}.tgt_node_id}})
@@ -26,7 +26,7 @@ rel-create-query: |
     }} IN TRANSACTIONS OF $transaction_size ROWS
 
 rel-merge-query: |
-    CALL {{
+    CALL ({row_name}) {{
         WITH {row_name}
         MATCH (n:{src_node_type} {{{id_property}: {row_name}.src_node_id}}),
             (m:{tgt_node_type} {{{id_property}: {row_name}.tgt_node_id}})
