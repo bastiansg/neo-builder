@@ -130,7 +130,7 @@ class BaseBuilder(ABC):
             df_nodes.to_csv(
                 self.out_path,
                 index=False,
-                chunksize=10_000,
+                # chunksize=10_000,
                 doublequote=False,
                 escapechar="\\",
             )
@@ -158,6 +158,7 @@ class BaseBuilder(ABC):
         rows = list(unique_everseen(rows, key=lambda row: row["node_id"]))
         head_creation_query = self._get_head_creation_query(rows=rows)
 
+        # NOTE: MERGE opration can not be performed when building from csv
         creation_query = (
             self.base_queries["node-create-query"].format(
                 row_name=self.query_row_name,
@@ -210,6 +211,8 @@ class BaseBuilder(ABC):
         )
 
         head_creation_query = self._get_head_creation_query(rows=rows)
+
+        # NOTE: MERGE opration can not be performed when building from csv
         creation_query = (
             self.base_queries["rel-create-query"].format(
                 row_name=self.query_row_name,

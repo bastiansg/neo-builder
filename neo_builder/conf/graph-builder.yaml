@@ -6,20 +6,17 @@ csv-head-creation-query: |
 
 node-create-query: |
     CALL ({row_name}) {{
-        WITH {row_name}
         CREATE (:{node_type} {{{property_fragment}}})
     }} IN TRANSACTIONS OF $transaction_size ROWS
 
 node-merge-query: |
     CALL ({row_name}) {{
-        WITH {row_name}
         MERGE ({node_name}:{node_type} {{node_id: {row_name}.node_id}})
         ON CREATE SET {property_fragment}
     }} IN TRANSACTIONS OF $transaction_size ROWS
 
 rel-create-query: |
     CALL ({row_name}) {{
-        WITH {row_name}
         MATCH (n:{src_node_type} {{{id_property}: {row_name}.src_node_id}}),
             (m:{tgt_node_type} {{{id_property}: {row_name}.tgt_node_id}})
         CREATE (n)-[:{rel_type} {{{property_fragment}}}]->(m)
@@ -27,7 +24,6 @@ rel-create-query: |
 
 rel-merge-query: |
     CALL ({row_name}) {{
-        WITH {row_name}
         MATCH (n:{src_node_type} {{{id_property}: {row_name}.src_node_id}}),
             (m:{tgt_node_type} {{{id_property}: {row_name}.tgt_node_id}})
         MERGE (n)-[{rel_name}:{rel_type}]->(m)
