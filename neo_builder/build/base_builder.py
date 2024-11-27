@@ -83,6 +83,8 @@ class BaseBuilder(ABC):
                 f"{name}{prop_name}{separator}"
                 f"{property_cast}({row_name}.{prop_name}),"
             )
+            if property_cast is not None
+            else f"{name}{prop_name}{separator}{row_name}.{prop_name},"
             for prop_name, property_cast in property_cast_map.items()
         )
 

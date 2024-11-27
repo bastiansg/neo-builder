@@ -1,3 +1,5 @@
+import numpy as np
+
 from joblib import hash
 from typing import Iterable
 
@@ -13,7 +15,13 @@ class GenreNodeBuilder(BaseBuilder):
         build_from_csv: bool = False,
         node_type: str = "Genre",
         out_file_name: str = "genre-nodes.csv",
-        property_cast_map: dict = {"genre": "toString"},
+        property_cast_map: dict = {
+            "genre": "toString",
+            # NOTE: if build_from_csv is False, property_castmust be None
+            # instead of apoc.convert.fromJsonList
+            "fake_vector": None,
+            # "fake_vector": "apoc.convert.fromJsonList",
+        },
     ):
         super().__init__(
             neo_connector=neo_connector,
@@ -33,7 +41,10 @@ class GenreNodeBuilder(BaseBuilder):
             BuilderRow(
                 node_id=GenreNodeBuilder.get_node_id(genre=genre),
                 node_type=self.node_type,
-                properties={"genre": genre},
+                properties={
+                    "genre": genre,
+                    "fake_vector": np.random.rand(16).tolist(),
+                },
             )
             for genre in data_item["genres"].split("|")
         )
