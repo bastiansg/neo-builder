@@ -1,3 +1,6 @@
+ARG UV_VERSION
+FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uv_source
+
 FROM ubuntu:noble
 
 ARG PYTHON_VERSION
@@ -21,9 +24,10 @@ RUN --mount=type=cache,target=/var/cache/apt \
     && rm -rf /var/tmp/* /var/lib/apt/lists/*
 
 RUN rm /usr/lib/python${PYTHON_VERSION}/EXTERNALLY-MANAGED
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python${PYTHON_VERSION} 1 \
+    && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python${PYTHON_VERSION} 1
 
-ARG UV_VERSION
-RUN curl -LsSf https://astral.sh/uv/${UV_VERSION}/install.sh | env UV_INSTALL_DIR="/usr/local" sh
+COPY --from=uv_source /uv /uvx /bin/
 
 WORKDIR /tmp
 
