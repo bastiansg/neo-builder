@@ -35,10 +35,13 @@ class Neo4jConnector:
     def run_query(
         self,
         query: str,
+        query_debug: bool = False,
         **kwargs,
     ) -> dict:
         with self.driver.session() as session:
-            print(f"executing query: \n{query}")
+            if query_debug:
+                print(f"executing query: \n{query}")
+
             result = session.run(query=query, **kwargs)
             result_data = result.data()
 
@@ -53,10 +56,12 @@ class Neo4jConnector:
     async def async_run_query(
         self,
         query: str,
+        query_debug: bool = False,
         **kwargs,
     ) -> dict:
         return await asyncio.to_thread(
             self.run_query,
             query=query,
+            query_debug=query_debug,
             **kwargs,
         )
