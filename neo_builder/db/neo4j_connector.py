@@ -10,7 +10,7 @@ from common.logger import get_logger
 logger = get_logger(__name__)
 
 
-NEO4J_URI = os.getenv("NEO_URI", "bolt://localhost:7687")
+NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
 
 
 # NOTE https://neo4j.com/docs/getting-started/languages-guides/neo4j-python/
