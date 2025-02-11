@@ -17,8 +17,9 @@ node-merge-query: |
 
 rel-create-query: |
     CALL ({row_name}) {{
-        MATCH (n:{src_node_type} {{{id_property}: {row_name}.src_node_id}}),
-            (m:{tgt_node_type} {{{id_property}: {row_name}.tgt_node_id}})
+        MATCH (n:{src_node_type} {{{id_property}: {row_name}.src_node_id}})
+        WITH n, {row_name}
+        MATCH (m:{tgt_node_type} {{{id_property}: {row_name}.tgt_node_id}})
         CREATE (n)-[:{rel_type} {{{property_fragment}}}]->(m)
     }} IN TRANSACTIONS OF $transaction_size ROWS
 
