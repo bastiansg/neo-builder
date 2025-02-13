@@ -19,11 +19,13 @@ class Neo4jConnector:
         self,
         neo4j_uri: str = NEO4J_URI,
         connection_pool_size: int = 128,
+        db_name: str | None = None,
     ):
         logger.debug(f"connecting to Neo4j at `{neo4j_uri}`")
         self.driver = GraphDatabase.driver(
             uri=neo4j_uri,
             auth=None,
+            database=db_name,
             max_connection_pool_size=connection_pool_size,
         )
 
