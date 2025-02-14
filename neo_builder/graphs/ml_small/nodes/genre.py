@@ -17,7 +17,7 @@ class GenreNodeBuilder(BaseBuilder):
         out_file_name: str = "genre-nodes.csv",
         property_cast_map: dict = {
             "genre": "toString",
-            # NOTE: if build_from_csv is False, property_castmust be None
+            # NOTE: if build_from_csv is False, property_cast must be None
             # instead of apoc.convert.fromJsonList
             "fake_vector": None,
             # "fake_vector": "apoc.convert.fromJsonList",
