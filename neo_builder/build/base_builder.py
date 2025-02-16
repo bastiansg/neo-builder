@@ -5,9 +5,9 @@ from itertools import chain
 from neo4j import SummaryCounters
 from more_itertools import flatten, unique_everseen
 
+from typing import Any, Iterable
 from abc import ABC, abstractmethod
 from pydantic import BaseModel, StrictStr
-from typing import Any, Iterable
 
 from common.logger import get_logger
 from common.utils.yaml_data import load_yaml
@@ -31,7 +31,7 @@ class BaseBuilder(ABC):
         self,
         neo_connector: Neo4jConnector,
         out_file_name: str,
-        data_items: list[dict],
+        data_items: Iterable[dict],
         property_cast_map: dict,
         node_type: str | None = None,
         rel_type: str | None = None,
@@ -88,7 +88,7 @@ class BaseBuilder(ABC):
             for prop_name, property_cast in property_cast_map.items()
         )
 
-        property_fragment = f"\n{' '*indent_spaces}".join(property_lines)[:-1]
+        property_fragment = f"\n{' ' * indent_spaces}".join(property_lines)[:-1]
         return property_fragment
 
     def _get_rows(self) -> list[BuilderRow]:
