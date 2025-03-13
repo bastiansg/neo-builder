@@ -1,5 +1,6 @@
-neo4j==5.28.1
-pandas==2.2.3
-pydantic==2.10.6
+pandas>=2.2.3
+pydantic>=2.10.6
 
-common @ git+https://github.com/aureka-team/common.git@v1.1.2
+neo4j==5.28.1
+
+common @ git+https://github.com/aureka-team/common.git@v1.1.4
