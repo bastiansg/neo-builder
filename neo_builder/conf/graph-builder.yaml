@@ -45,7 +45,7 @@ full-text-index: |
     FOR (n:{node_type}) ON EACH [n.{node_property}]
     OPTIONS {{
         indexConfig: {{
-                `fulltext.analyzer`: 'whitespace',
+                `fulltext.analyzer`: 'standard-folding',
                 `fulltext.eventually_consistent`: true
             }}
     }}
